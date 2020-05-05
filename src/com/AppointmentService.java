@@ -112,7 +112,7 @@ public class AppointmentService {
 
 			preparedStmt.execute();
 			con.close();
-			output = "Updated successfully";
+			output = "success";
 		} catch (Exception e) {
 			output = "Error while updating the item.";
 			System.err.println(e.getMessage());
@@ -176,7 +176,7 @@ public class AppointmentService {
 						// execute the statement
 						preparedStmt.execute();
 						con.close();
-						output = "Deleted successfully";
+						output = "success";
 					} catch (Exception e) {
 						e.printStackTrace();
 						output = "Error while deleting the item.";
