@@ -32,12 +32,12 @@ $(document).on("click", "#btnSave", function(event) {
 		data : $("#formAppointment").serialize(),
 		dataType : "text",
 		complete : function(response, status) {
-			onAppointmentaveComplete(response.responseText, status);
+			onAppointmenSaveComplete(response.responseText, status);
 		}
 	});
 });
 
-function onAppointmentaveComplete(response, status) {
+function onAppointmenSaveComplete(response, status) {
 	if (status == "success") {
 		var resultSet = JSON.parse(response);
 		if (resultSet.status.trim() == "success") {

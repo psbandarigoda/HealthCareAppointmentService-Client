@@ -32,9 +32,11 @@ public class AppointmentService {
 
 			preparedStmt.execute();
 			con.close();
-			output = "success";
+			String newAppointment = readAppointment();
+			 output = "{\"status\":\"success\", \"data\": \"" + newAppointment + "\"}"; 
+			//output = "Inserted successfully";
 		} catch (Exception e) {
-			output = "error";
+			output = "{\"status\":\"error\", \"data\": " + "\"Error while inserting the Appointment.\"}"; 
 			System.err.println(e.getMessage());
 		}
 		return output;
@@ -78,7 +80,7 @@ public class AppointmentService {
 //						+ "<input name=\"hidItemIDDelete\" type=\"hidden\" value=\"" + id + "\">" + "</form></td></tr>";
 				
 				output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td> "
-						+ "<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-itemid='\"" + id + "\"'>";
+						+ "<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-itemid='\"" + id + "\"'></td></tr>";
 //						+ "<form method=\"post\" action=\"Appointment.jsp\">"
 //						+ "<input name=\"hidItemIDDelete\" type=\"hidden\"value=\"" + id + "\">" + "</form></td></tr>"; 
 			}
@@ -112,9 +114,10 @@ public class AppointmentService {
 
 			preparedStmt.execute();
 			con.close();
-			output = "success";
+			String newAppointment = readAppointment();
+			 output = "{\"status\":\"success\", \"data\": \"" + newAppointment + "\"}"; 
 		} catch (Exception e) {
-			output = "Error while updating the item.";
+			output = "{\"status\":\"error\", \"data\": " + "\"Error while updating the Appointment.\"}";
 			System.err.println(e.getMessage());
 		}
 		return output;
@@ -176,10 +179,11 @@ public class AppointmentService {
 						// execute the statement
 						preparedStmt.execute();
 						con.close();
-						output = "success";
+						String newAppointment = readAppointment();
+						 output = "{\"status\":\"success\", \"data\": \"" + newAppointment + "\"}"; 
 					} catch (Exception e) {
 						e.printStackTrace();
-						output = "Error while deleting the item.";
+						output = "{\"status\":\"error\", \"data\": " + "\"Error while deleting the Appointment.\"}";
 						System.err.println(e.getMessage());
 					}
 //					con2.close();
