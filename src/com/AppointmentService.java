@@ -1,6 +1,7 @@
 package com;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 import database.DBConnection;
 import model.AppointmentModel;
@@ -8,7 +9,7 @@ import model.AppointmentModel;
 public class AppointmentService {
 
 	// Insert method which insert data to Appointment table
-	public String insertAppointment(String patientId, String hospital, String doctor, Long date) {
+	public String insertAppointment(String patientId, String hospital, String doctor, String date) {
 		String output = "";
 		try {
 			Connection con = DBConnection.connect();
@@ -24,13 +25,16 @@ public class AppointmentService {
 			preparedStmt.setString(2, patientId);
 			preparedStmt.setString(3, hospital);
 			preparedStmt.setString(4, doctor);
-			preparedStmt.setLong(5, date);
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-mm-yyyy");
+			java.util.Date date1 = sdf1.parse(date);
+			java.sql.Date sqlStartDate = new java.sql.Date(date1.getTime()); 
+			preparedStmt.setDate(5, sqlStartDate);
 
 			preparedStmt.execute();
 			con.close();
-			output = "Inserted successfully";
+			output = "success";
 		} catch (Exception e) {
-			output = "Error while inserting";
+			output = "error";
 			System.err.println(e.getMessage());
 		}
 		return output;
@@ -60,17 +64,23 @@ public class AppointmentService {
 				String date = rs.getString("date");
 
 				// Add into the HTML table
-				output += "<tr><td>" + id + "</td>";
+//				output += "<tr><td>" + id + "</td>";
+				output += "<tr><td><input id=\"hidItemIDUpdate\"name=\"hidItemIDUpdate\"type=\"hidden\" value=\"" + id + "\">" + id + "</td>";
 				output += "<td>" + user + "</td>";
 				output += "<td>" + hospital + "</td>";
 				output += "<td>" + doctor + "</td>";
 				output += "<td>" + date + "</td>";
 
 				// buttons
-				output += "<td><input name=\"btnUpdate\" type=\"button\" value=\"Update\" class=\"btn btn-secondary\"></td>"
-						+ "<td><form method=\"post\" action=\"items.jsp\">"
-						+ "<input name=\"btnRemove\" type=\"submit\" value=\"Delete\"class=\"btn btn-danger\">"
-						+ "<input name=\"itemID\" type=\"hidden\" value=\"" + id + "\">" + "</form></td></tr>";
+//				output += "<td><input name=\"btnUpdate\" type=\"button\" value=\"Update\" class=\"btn btn-secondary\"></td>"
+//						+ "<td><form method=\"post\" action=\"Appointment.jsp\">"
+//						+ "<input name=\"btnRemove\" type=\"submit\" value=\"Delete\"class=\"btn btn-danger\">"
+//						+ "<input name=\"hidItemIDDelete\" type=\"hidden\" value=\"" + id + "\">" + "</form></td></tr>";
+				
+				output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td> "
+						+ "<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-itemid='\"" + id + "\"'>";
+//						+ "<form method=\"post\" action=\"Appointment.jsp\">"
+//						+ "<input name=\"hidItemIDDelete\" type=\"hidden\"value=\"" + id + "\">" + "</form></td></tr>"; 
 			}
 			con.close();
 			// Complete the HTML table
@@ -116,41 +126,41 @@ public class AppointmentService {
 		java.sql.Date sqlDate = null;
 
 		//  Get Appointment data by ID
-		try {
-			Connection con1 = DBConnection.connect();
+//		try {
+//			Connection con1 = DBConnection.connect();
+//
+//			AppointmentModel appointment = new AppointmentModel();
+//
+//			String query1 = "select * from appointment where id=?";
+//			PreparedStatement preparedStmt1 = con1.prepareStatement(query1);
+//			preparedStmt1.setInt(1, Integer.parseInt(id));
+//
+//			ResultSet rs = preparedStmt1.executeQuery();
 
-			AppointmentModel appointment = new AppointmentModel();
-
-			String query1 = "select * from appointment where id=?";
-			PreparedStatement preparedStmt1 = con1.prepareStatement(query1);
-			preparedStmt1.setInt(1, Integer.parseInt(id));
-
-			ResultSet rs = preparedStmt1.executeQuery();
-
-			while (rs.next()) {
-				appointment.setId(Integer.parseInt(id));
-				appointment.setPatientId(rs.getString("patientId").toString());
-				appointment.setHospital(rs.getString("hospital"));
-				appointment.setDoctor(rs.getString("doctor"));
-				java.util.Date utilDate = rs.getDate("date");
-				sqlDate = rs.getDate("date");
-				appointment.setDate(utilDate);
+//			while (rs.next()) {
+//				appointment.setId(Integer.parseInt(id));
+//				appointment.setPatientId(rs.getString("patientId").toString());
+//				appointment.setHospital(rs.getString("hospital"));
+//				appointment.setDoctor(rs.getString("doctor"));
+//				java.util.Date utilDate = rs.getDate("date");
+//				sqlDate = rs.getDate("date");
+//				appointment.setDate(utilDate);
 
 				// Insert method which insert data to rm_appointment table
-				try {
-					Connection con2 = DBConnection.connect();
-
-					String query2 = " insert into rm_appointment(`id`,`patientId`,`hospital`,`doctor`,`date`)"
-							+ " values (?, ?, ?, ?, ?)";
-					PreparedStatement preparedStmt2 = con2.prepareStatement(query2);
-
-					preparedStmt2.setInt(1, Integer.parseInt(id));
-					preparedStmt2.setString(2, appointment.getPatientId());
-					preparedStmt2.setString(3, appointment.getHospital());
-					preparedStmt2.setString(4, appointment.getDoctor());
-					preparedStmt2.setDate(5, sqlDate);
-
-					preparedStmt2.execute();
+//				try {
+//					Connection con2 = DBConnection.connect();
+//
+//					String query2 = " insert into rm_appointment(`id`,`patientId`,`hospital`,`doctor`,`date`)"
+//							+ " values (?, ?, ?, ?, ?)";
+//					PreparedStatement preparedStmt2 = con2.prepareStatement(query2);
+//
+//					preparedStmt2.setInt(1, Integer.parseInt(id));
+//					preparedStmt2.setString(2, appointment.getPatientId());
+//					preparedStmt2.setString(3, appointment.getHospital());
+//					preparedStmt2.setString(4, appointment.getDoctor());
+//					preparedStmt2.setDate(5, sqlDate);
+//
+//					preparedStmt2.execute();
 
 					//Delete Appointment from appointment table
 					try {
@@ -162,7 +172,7 @@ public class AppointmentService {
 						String query = "delete from appointment where id=?";
 						PreparedStatement preparedStmt = con.prepareStatement(query);
 						// binding values
-						preparedStmt.setInt(1, Integer.parseInt(id));
+						preparedStmt.setInt(1, Integer.parseInt(id.substring(1, id.length()-1)));
 						// execute the statement
 						preparedStmt.execute();
 						con.close();
@@ -172,16 +182,16 @@ public class AppointmentService {
 						output = "Error while deleting the item.";
 						System.err.println(e.getMessage());
 					}
-					con2.close();
-				} catch (Exception e) {
-					output = "Error while inserting";
-					System.err.println(e.getMessage());
-				}
-			con1.close();
-			}
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
+//					con2.close();
+//				} catch (Exception e) {
+//					output = "Error while inserting";
+//					System.err.println(e.getMessage());
+//				}
+//			con1.close();
+//			}
+//		} catch (Exception e) {
+//			System.err.println(e.getMessage());
+//		}
 		return output;
 	}
 

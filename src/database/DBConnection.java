@@ -11,7 +11,7 @@ public class DBConnection {
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/healthcare", "root", "root");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppointmentDB", "root", "mysql");
 			System.out.println("Database Connected");
 		} catch (Exception e) {
 			e.printStackTrace();
